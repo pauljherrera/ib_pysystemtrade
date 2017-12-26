@@ -17,8 +17,13 @@ from syscore.algos import robust_vol_calc
 
 def main():
     lector = Reader()
-    activo = "FRED/GDP"
-    df = lector.read_quandl_option(activo)
+    activo = "FRED/AAA10Y"
+#    df = lector.read_quandl_option(activo)
+    
+    df = lector.read_csv_option('BTCdata')
+    
+    df = pd.read_csv('BTCdata.csv', parse_dates={'Date':["date","time"]})
+    df = df.set_index('Date')[['close']]
 
     #Se descarga un DF desde quandl, esto con el fin de cambiar la forma en que se cargan los datos
 
@@ -69,10 +74,10 @@ def main():
 
     print(account.percent().stats())
 
-    
+    return data, price, ewmac
 
     
     
 
 if __name__ == '__main__':
-    main()
+    d, p, ewmac= main()

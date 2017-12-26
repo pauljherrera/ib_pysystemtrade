@@ -28,7 +28,7 @@ class getDataFrame(Data):
 
         setattr(self,"activo",dataframe) # para probar que se está leyendo el df
 
-    def get_close_price(Self,dataframe):
+    def get_close_price(self, dataframe):
         """
         Obtener el precio close del dataframe
 

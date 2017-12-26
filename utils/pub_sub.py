@@ -1,12 +1,14 @@
 class Subscriber:
-    def __init__(self, name, *args, **kwargs):
+    def __init__(self, name='Default Subscriber', *args, **kwargs):
         super().__init__()
         self.name = name
 
     def update(self, message):
         # start new Thread in here to handle any task
-#        print('\n\n {} got message "{}"'.format(self.name, message))
-        pass
+        print('\n\n {} got message:'.format(self.name))
+        print(message)
+
+
         
 class Publisher:
     def __init__(self, events, *args, **kwargs):
@@ -24,6 +26,9 @@ class Publisher:
                 
     def register(self, event, channel):
         self.get_subscribers(event)[channel] = channel.update
+        
+    def set_event(self, event):
+        self.events[event] = dict()
 
     def unregister(self, event, channel):
         del self.get_subscribers(event)[channel]
