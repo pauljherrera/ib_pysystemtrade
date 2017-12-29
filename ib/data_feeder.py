@@ -20,10 +20,10 @@ from utils import pub_sub
 
 class IBDataFeeder:
     """
-    Data feeder for historical and live prices.
+    Data feeder for live prices.
     """
     def __init__(self, instruments=None, 
-                 host='127.0.0.1', port=4002, auto_dispatch=False,
+                 host='127.0.0.1', port=4003, auto_dispatch=False,
                  *args, **kwargs):
         # Connecting to IB.
         self.client_id = np.random.randint(1, 100)
@@ -102,11 +102,13 @@ class IBfeeder_pst_adapter(IBDataFeeder):
 
         
 if __name__ == "__main__":
-    instruments = ['USDCAD', 'EURJPY']
+    instruments = ['USDJPY', 'EURGBP']
     data_feeder = IBfeeder_pst_adapter(instruments=instruments, timeframe=1)
     
     subscriber = pub_sub.Subscriber()
     data_feeder.pub.register('pysystemtrade_data', subscriber)
+    
+    
     
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
     try:

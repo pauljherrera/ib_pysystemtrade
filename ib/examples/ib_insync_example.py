@@ -9,7 +9,7 @@ from ib_insync import *
 import pandas as pd
 
 ib = IB()
-ib.connect('127.0.0.1', 4002, clientId=10)
+ib.connect('127.0.0.1', 4003, clientId=10)
 
 contract = Forex('EURUSD')
 
@@ -26,6 +26,10 @@ def onBarUpdate(bars, hasNewBar):
 ib.setCallback('barUpdate', onBarUpdate)
 
 bars = ib.reqRealTimeBars(contract, 5, 'MIDPOINT', False)
+
+# Historical data.
+bars = ib.reqHistoricalData(contract, endDateTime='', durationStr='1 Y',
+        barSizeSetting='1 min', whatToShow='MIDPOINT', useRTH=True)
 
 df = pd.DataFrame(columns='symbol bidSize bid ask askSize high low close'.split())
 df['symbol'] = [c.symbol + c.currency for c in contracts]
