@@ -28,7 +28,7 @@ class IBHistoricalData:
                  host='127.0.0.1', port=4003,
                  *args, **kwargs):
         # Connecting to IB.
-        self.client_id = np.random.randint(1, 100)
+        self.client_id = np.random.randint(1, 500)
         self.ib = ib.IB()
         self.ib.connect(host, port, clientId=self.client_id)
         
@@ -69,7 +69,7 @@ class IBHistoricalData:
 
 if __name__ == "__main__":
     instruments = ['USDJPY', 'EURGBP']
-    data_feeder = IBHistoricalData(instruments=instruments, timeframe=5,
+    hist_data = IBHistoricalData(instruments=instruments, timeframe=5,
                                    duration='1 M')
     
 

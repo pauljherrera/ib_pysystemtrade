@@ -26,7 +26,7 @@ class IBDataFeeder:
                  host='127.0.0.1', port=4003, auto_dispatch=False,
                  *args, **kwargs):
         # Connecting to IB.
-        self.client_id = np.random.randint(1, 100)
+        self.client_id = np.random.randint(1, 500)
         self.ib = ib.IB()
         self.ib.connect(host, port, clientId=self.client_id)
         
@@ -44,6 +44,7 @@ class IBDataFeeder:
         self.instruments_df = {}
         self.instruments_data = {}
         for inst in instruments:
+            print("\nConnecting to live historical data channel for instrument: {}".format(inst))
             self.instruments_data[inst] = self.ib.reqRealTimeBars(self.instruments_contracts[inst], 
                                                                   5, 'MIDPOINT', 
                                                                   False)
@@ -84,20 +85,23 @@ class IBfeeder_pst_adapter(IBDataFeeder):
         # Scheduling timed calls.
         self.timeframe = timeframe
         scheduler = BackgroundScheduler()
-        scheduler.add_job(self.update, trigger='cron',
+        scheduler.add_job(self.onTimer, trigger='cron',
                           minute='*/{}'.format(timeframe))
         scheduler.start()
         
         # Adding pysystemtrade channel.
         self.pub.set_event('pysystemtrade_data')
     
-    def update(self):
+    def onTimer(self):
         data = {}
         for inst in self.instruments_names:
             df = self.instruments_df[inst].set_index('time')
             data[inst] = df.resample('{}T'.format(self.timeframe))\
-                           .last()['close']
+                           .last()['close'].to_frame(name='close')
         self.pub.dispatch('pysystemtrade_data', data)
+        
+
+        
         
 
         
