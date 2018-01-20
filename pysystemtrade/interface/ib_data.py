@@ -3,7 +3,11 @@
 Avanti.
 """
 
-from interface.instrumentsdata import instrumentsData
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+from pysystemtrade.interface.instrumentsdata import instrumentsData
 
 
 class ib_Data(instrumentsData):

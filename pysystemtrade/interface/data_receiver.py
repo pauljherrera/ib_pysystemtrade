@@ -10,6 +10,12 @@ from pysystemtrade.systems.provided.example.rules import ewmac_forecast_with_def
 from pysystemtrade.systems.forecasting import Rules
 from pysystemtrade.systems.basesystem import System
 from pysystemtrade.sysdata.configdata import Config
+from systems.forecast_combine import ForecastCombine
+from systems.forecast_scale_cap import ForecastScaleCap
+from systems.rawdata import RawData
+from systems.positionsizing import PositionSizing
+from systems.portfolio import Portfolios
+from systems.account import Account
 
 from ib.data_feeder import IBfeeder_pst_adapter
 from ib.historical_data import IBHistoricalData
@@ -30,26 +36,34 @@ class DataReceiver(pub_sub.Subscriber):
     def update(self, message):
         data = self.get_data(message)
         # Ib data Object. This is the Object that manage the data from ibAPI. 
-        conector = ib_Data(data)
+        my_data = ib_Data(data)
     
         # create a list with the instruments for the config object
-        systemInstruments = list(conector.get_portfolio(data))
+        systemInstruments = list(my_data.get_portfolio(data))
         
-        my_config = Config()  # create a config object.
-    
+        my_config = Config("private.config.yaml")  # create a config object.
         # Set the instrument of the system via the config.
         my_config.instruments = systemInstruments
     
+        # Setting the rules.
         my_rules = Rules(dict(ewmac=ewmac))
         my_rules.trading_rules()
-    
-        my_system = System([my_rules], conector, my_config)
-    
+        
+        # Initializing the system with all the stages.
+        my_stages = [Account(), Portfolios(), PositionSizing(), 
+                     RawData(), ForecastCombine(), ForecastScaleCap(),
+                     my_rules]
+        my_system = System(stage_list=my_stages, 
+                           data=my_data, 
+                           config=my_config)
+            
+        
         # Forecast for each instrument.
         for i in message.keys():
             print("\n{} forecast:\n".format(i))
-            forecast = my_system.rules.get_raw_forecast(i, "ewmac")
-            print(forecast.tail(10), '\n')
+            position = my_system.positionSize.get_subsystem_position(i)
+#            forecast = my_system.rules.get_raw_forecast(i, "ewmac")
+            print(position.tail(10), '\n')
             
             
     def get_data(self, live_data):
@@ -71,7 +85,7 @@ class DataReceiver(pub_sub.Subscriber):
 
 
 if __name__ == '__main__':
-    instruments = ['USDJPY', 'EURGBP']
+    instruments = ['USDJPY', 'EURJPY']
     data_feeder = IBfeeder_pst_adapter(instruments=instruments, timeframe=1)
     hist_data = IBHistoricalData(instruments=instruments, timeframe=1,
                                  duration='1 D')
