@@ -44,9 +44,6 @@ def onPendingTickers(tickers):
 ib.setCallback('pendingTickers', onPendingTickers)
 ib.sleep(60)
 
-order = MarketOrder('BUY', 1000)
-trade = ib.placeOrder(contract, order)
-ib.sleep(1)
 trade.log
 
 

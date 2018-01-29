@@ -188,6 +188,7 @@ def generate_fitting_dates(data, date_method, rollyears=20):
 
     if date_method in ['rolling', 'expanding']:
         # add on a dummy date for the first year, when we have no data
+        print(yearstarts)
         periods = [
             fit_dates_object(
                 start_date,

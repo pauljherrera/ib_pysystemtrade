@@ -5,6 +5,14 @@ from syscore.dateutils import ROOT_BDAYS_INYEAR
 from syscore.algos import robust_vol_calc
 from systems.system_cache import input, dont_cache, diagnostic, output
 
+VOLATILITY_DIVISOR = {
+    1: 602.4
+    5: 269.4
+    15: 155.54
+    60: 78.4
+    240: 39.9
+    1440: 16.0
+}
 
 class PositionSizing(SystemStage):
     """
@@ -102,6 +110,11 @@ class PositionSizing(SystemStage):
             price = system.data.daily_prices(instrument_code)
             return_vol = robust_vol_calc(price.diff())
             daily_perc_vol = 100.0 * return_vol / price
+            print(instrument_code)
+            print('return_vol')
+            print(return_vol)
+            print('daily_perc_vol')
+            print(daily_perc_vol)
 
         return daily_perc_vol
 
@@ -200,7 +213,7 @@ class PositionSizing(SystemStage):
         base_currency = system.config.base_currency
 
         annual_cash_vol_target = notional_trading_capital * percentage_vol_target / 100.0
-        daily_cash_vol_target = annual_cash_vol_target / ROOT_BDAYS_INYEAR
+        daily_cash_vol_target = annual_cash_vol_target / VOLATILITY_DIVISOR[int(system.config.timeframe)]
 
         # FIXME this thing ain't too pretty
         vol_target_dict = dict(

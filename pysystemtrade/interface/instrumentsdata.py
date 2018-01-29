@@ -8,10 +8,10 @@ class instrumentsData(Data):
         See legacy.py
     """
 
-    def __init__(self, dataframe=None):
-        super().__init__()
+    def __init__(self, dataframe=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # Check the instrument we are passing.
-        setattr(self, "Instrument", dataframe)
+        setattr(self, "Instruments", dataframe)
 
 
     # This override the get_raw_price of data class
@@ -26,24 +26,12 @@ class instrumentsData(Data):
            df = data[instrument_code]          
            priceValue = df['close']
         else:
-            completeInstruments = self.Instrument
             #Extract the Dict from init.
-            dfInstruments = completeInstruments[instrument_code]
-            df = dfInstruments
+            df = self.Instruments[instrument_code]
             #Set the datetime as index.
             priceValue =  df['close']
             
         return priceValue
 
 
-    # This override the daily_prices of data class
-    def daily_prices(self, instrument_code):
-        """
-        Gets daily prices
-        :param instrument_code: Instrument to get prices for
-        :type trading_rules: str
-        :returns: Tx1 pd.Series
-        """
-        instrprice = self.get_raw_price(instrument_code)
 
-        return instrprice

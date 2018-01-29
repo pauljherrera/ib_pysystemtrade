@@ -19,31 +19,43 @@ from systems.account import Account
 
 from ib.data_feeder import IBfeeder_pst_adapter
 from ib.historical_data import IBHistoricalData
+from ib.connection import get_ib_connection
 from utils import pub_sub
+import config
+
 
 
 
 class DataReceiver(pub_sub.Subscriber):
-    def __init__(self, hist_data=None, *args, **kwargs):
+    def __init__(self, instruments_list, hist_data=None, *args, **kwargs):
         """
+        :param instrument_list: list of str containing the ticker names of
+                                the instruments to be traded.
         :param hist_data: ib.historical_data.IBHistoricalData instance
         """
         super().__init__(*args, **kwargs)
         if hist_data:
             self.hist_data = hist_data
+        self.pub = pub_sub.Publisher(events=instruments_list)
+        
+        print("\nData receiver initiallized. Wait for the first forecast.")
         
             
     def update(self, message):
+        """
+        Subscriber pattern main method. Will be called each time a registered
+        event occurs.
+        
+        :param message: dict with instrument names as keys and pd.Dataframe
+                        as values.
+        """
         data = self.get_data(message)
         # Ib data Object. This is the Object that manage the data from ibAPI. 
         my_data = ib_Data(data)
     
         # create a list with the instruments for the config object
-        systemInstruments = list(my_data.get_portfolio(data))
-        
         my_config = Config("private.config.yaml")  # create a config object.
-        # Set the instrument of the system via the config.
-        my_config.instruments = systemInstruments
+        my_config.instruments = my_data.get_instruments_list()
     
         # Setting the rules.
         my_rules = Rules(dict(ewmac=ewmac))
@@ -51,7 +63,7 @@ class DataReceiver(pub_sub.Subscriber):
         
         # Initializing the system with all the stages.
         my_stages = [Account(), Portfolios(), PositionSizing(), 
-                     RawData(), ForecastCombine(), ForecastScaleCap(),
+                     ForecastCombine(), ForecastScaleCap(),
                      my_rules]
         my_system = System(stage_list=my_stages, 
                            data=my_data, 
@@ -61,9 +73,13 @@ class DataReceiver(pub_sub.Subscriber):
         # Forecast for each instrument.
         for i in message.keys():
             print("\n{} forecast:\n".format(i))
-            position = my_system.positionSize.get_subsystem_position(i)
-#            forecast = my_system.rules.get_raw_forecast(i, "ewmac")
-            print(position.tail(10), '\n')
+            position = my_system.portfolio.get_notional_position(i)
+            
+            # Publishing forecast.
+            message = dict(ticker=i, forecast=position.iloc[-1])
+            print(position.tail(5))
+            self.pub.dispatch(i, message)
+            
             
             
     def get_data(self, live_data):
@@ -85,11 +101,23 @@ class DataReceiver(pub_sub.Subscriber):
 
 
 if __name__ == '__main__':
-    instruments = ['USDJPY', 'EURJPY']
-    data_feeder = IBfeeder_pst_adapter(instruments=instruments, timeframe=1)
-    hist_data = IBHistoricalData(instruments=instruments, timeframe=1,
-                                 duration='1 D')
-    subscriber = DataReceiver(hist_data=hist_data)
+    # Configuration.
+    instruments = config.instruments['forex'] \
+                  + config.instruments['futures'] \
+                  + config.instruments['stocks']
+    timeframe = config.TIMEFRAME
+                  
+    # Initiallization.
+    ib_connection = get_ib_connection()
+    data_feeder = IBfeeder_pst_adapter(instruments_list=instruments, 
+                                       timeframe=timeframe, 
+                                       ib_connection=ib_connection)
+    hist_data = IBHistoricalData(instruments_list=instruments, 
+                                 timeframe=timeframe,
+                                 duration='1 D', 
+                                 ib_connection=ib_connection)
+    subscriber = DataReceiver(instruments_list=instruments,
+                              hist_data=hist_data)
     data_feeder.pub.register('pysystemtrade_data', subscriber)
     
     

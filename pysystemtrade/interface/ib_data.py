@@ -15,16 +15,19 @@ class ib_Data(instrumentsData):
 
     Extends the isntrumentData class for a specific data source
     """
-    def __init__(self,instrument, *args, **kwargs):
+    def __init__(self, instrument, *args, **kwargs):
         """
         Deals with Interactive Brokers data. Inherits from instrumentsData.
         """
         super().__init__(*args, **kwargs)
-        setattr(self,"Instrument", instrument)
+        setattr(self,"Instruments", instrument)
+
+    def daily_prices(self, instrument_code):
+        return self.get_raw_price(instrument_code)
 
 
-    def get_portfolio(self,instruments):
-        portfolio = instruments.keys()
+    def get_instruments_list(self):
+        portfolio = self.Instruments.keys()
         
         return portfolio
     
@@ -32,21 +35,15 @@ class ib_Data(instrumentsData):
     def get_specific_instrument(self,instrument,name):
        ins = instrument[name]
 
-       return ins
-   
-    
-    def get_instrument_list(self,instrument):
-        number = len(instrument.keys())
-        
-        return number           
+       return ins       
 
-    def daily_prices(self, instrument_code):     #This override the daily_prices of data class
-        """
-        Gets daily prices
-        :param instrument_code: Instrument to get prices for
-        :type trading_rules: str
-        :returns: Tx1 pd.Series
-        """
-        instrprice = self.get_raw_price(instrument_code)
 
-        return instrprice
+    def get_value_of_block_price_move(self, instrument_code):
+        block_price_move = {
+            'USDJPY' : 1000,
+            'EURGBP' : 998,
+            'GBPUSD' : 1000,
+            'EURUSD' : 1000,
+        }
+
+        return block_price_move[instrument_code]
