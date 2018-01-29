@@ -6,7 +6,7 @@ import asyncio
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
 from pysystemtrade.interface.ib_data import ib_Data
-from pysystemtrade.systems.provided.example.rules import ewmac_forecast_with_defaults as ewmac
+from pysystemtrade.private.rules import ewmac_forecast_with_defaults as ewmac
 from pysystemtrade.systems.forecasting import Rules
 from pysystemtrade.systems.basesystem import System
 from pysystemtrade.sysdata.configdata import Config
@@ -76,7 +76,7 @@ class DataReceiver(pub_sub.Subscriber):
             position = my_system.portfolio.get_notional_position(i)
             
             # Publishing forecast.
-            message = dict(ticker=i, forecast=position.iloc[-1])
+            message = dict(ticker=i, forecast=int(position.iloc[-1]))
             print(position.tail(5))
             self.pub.dispatch(i, message)
             

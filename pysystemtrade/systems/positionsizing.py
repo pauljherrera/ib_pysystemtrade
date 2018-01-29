@@ -6,12 +6,12 @@ from syscore.algos import robust_vol_calc
 from systems.system_cache import input, dont_cache, diagnostic, output
 
 VOLATILITY_DIVISOR = {
-    1: 602.4
-    5: 269.4
-    15: 155.54
-    60: 78.4
-    240: 39.9
-    1440: 16.0
+    1: 602.4,
+    5: 269.4,
+    15: 155.54,
+    60: 78.4,
+    240: 39.9,
+    1440: 16.0,
 }
 
 class PositionSizing(SystemStage):
@@ -110,11 +110,6 @@ class PositionSizing(SystemStage):
             price = system.data.daily_prices(instrument_code)
             return_vol = robust_vol_calc(price.diff())
             daily_perc_vol = 100.0 * return_vol / price
-            print(instrument_code)
-            print('return_vol')
-            print(return_vol)
-            print('daily_perc_vol')
-            print(daily_perc_vol)
 
         return daily_perc_vol
 

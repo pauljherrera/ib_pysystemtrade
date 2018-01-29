@@ -40,10 +40,10 @@ class ib_Data(instrumentsData):
 
     def get_value_of_block_price_move(self, instrument_code):
         block_price_move = {
-            'USDJPY' : 1000,
-            'EURGBP' : 998,
-            'GBPUSD' : 1000,
-            'EURUSD' : 1000,
+            'USDJPY' : 1,
+            'EURGBP' : 1,
+            'GBPUSD' : 1,
+            'EURUSD' : 1,
         }
 
         return block_price_move[instrument_code]
