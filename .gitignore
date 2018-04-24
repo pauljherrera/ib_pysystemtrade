@@ -3,3 +3,5 @@ SystematicTrading.pdf
 */__pycache__
 .vscode
 myvenv
+*.docx
+*.tmp
