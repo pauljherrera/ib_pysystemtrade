@@ -93,6 +93,8 @@ class DataReceiver(pub_sub.Subscriber):
         data = {}
         for k in live_data.keys():
             df_1 = self.hist_data.instruments_data[k].set_index('date')[['close']]
+            print(df_1)
+            print(live_data)
             concatenated = pd.concat([df_1, live_data[k]], axis=0)
             data[k] = concatenated.groupby(concatenated.index).last()
         

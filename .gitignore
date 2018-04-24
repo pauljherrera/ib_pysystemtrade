@@ -1,3 +1,5 @@
 SystematicTrading.pdf
 *.pyc
 */__pycache__
+.vscode
+myvenv
