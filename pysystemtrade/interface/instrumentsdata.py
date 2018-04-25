@@ -21,9 +21,10 @@ class instrumentsData(Data):
         :param data: raw DataObject with stocks indicators.
         :type data: None or Pd.Series.
         """
+        
         #this conditional fix the problem of the forecasting class to work with dicts.
         if data is not None:                                    
-           df = data[instrument_code]          
+           df = data[instrument_code2]          
            priceValue = df['close']
         else:
             #Extract the Dict from init.

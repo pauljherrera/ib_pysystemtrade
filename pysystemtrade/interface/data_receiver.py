@@ -54,17 +54,17 @@ class DataReceiver(pub_sub.Subscriber):
         my_data = ib_Data(data)
     
         # create a list with the instruments for the config object
-        my_config = Config("private.config.yaml")  # create a config object.
+        my_config = Config("private.nocarryconfig.yaml")  # create a config object.
         my_config.instruments = my_data.get_instruments_list()
     
         # Setting the rules.
-        my_rules = Rules(dict(ewmac=ewmac))
-        my_rules.trading_rules()
+        my_rules = Rules()
+        
         
         # Initializing the system with all the stages.
-        my_stages = [Account(), Portfolios(), PositionSizing(), 
-                     ForecastCombine(), ForecastScaleCap(),
-                     my_rules]
+        my_stages = [Account(), Portfolios(), PositionSizing(), RawData(),
+        ForecastCombine(), ForecastScaleCap(), my_rules]
+
         my_system = System(stage_list=my_stages, 
                            data=my_data, 
                            config=my_config)
@@ -93,8 +93,6 @@ class DataReceiver(pub_sub.Subscriber):
         data = {}
         for k in live_data.keys():
             df_1 = self.hist_data.instruments_data[k].set_index('date')[['close']]
-            print(df_1)
-            print(live_data)
             concatenated = pd.concat([df_1, live_data[k]], axis=0)
             data[k] = concatenated.groupby(concatenated.index).last()
         

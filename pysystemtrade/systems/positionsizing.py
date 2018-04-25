@@ -208,7 +208,7 @@ class PositionSizing(SystemStage):
         base_currency = system.config.base_currency
 
         annual_cash_vol_target = notional_trading_capital * percentage_vol_target / 100.0
-        daily_cash_vol_target = annual_cash_vol_target / VOLATILITY_DIVISOR[int(system.config.timeframe)]
+        daily_cash_vol_target = annual_cash_vol_target / ROOT_BDAYS_INYEAR#VOLATILITY_DIVISOR[int(system.config.timeframe)]
 
         # FIXME this thing ain't too pretty
         vol_target_dict = dict(

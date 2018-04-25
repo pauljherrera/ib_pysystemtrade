@@ -63,6 +63,8 @@ if __name__ == '__main__':
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
     try:
         asyncio.get_event_loop().run_forever()
+        # loop = asyncio.new_event_loop()
+        # asyncio.set_event_loop(loop)
     except (KeyboardInterrupt, SystemExit):
         pass
 
