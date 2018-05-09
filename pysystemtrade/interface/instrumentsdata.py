@@ -1,4 +1,4 @@
-from sysdata.data import Data
+from pysystemtrade.sysdata.data import Data
 
 
 class instrumentsData(Data):

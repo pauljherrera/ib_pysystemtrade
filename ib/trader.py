@@ -2,8 +2,10 @@
 import os
 import sys
 import asyncio
-
+from ib_insync import *
 import ib_insync as ib
+util.patchAsyncio()
+
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from ib.connection import IBConnection
@@ -168,7 +170,7 @@ class IBTrader(IBConnection, pub_sub.Subscriber):
         # Waiting for execution.
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        ib.IB.run(asyncio.sleep(0.2, loop=loop))
+        # ib.IB.run(asyncio.sleep(0.2, loop=loop))
 #        future = asyncio.ensure_future(self.ib.sleep()) 
 #        loop.run_until_complete(future)
             

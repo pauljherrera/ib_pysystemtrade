@@ -110,8 +110,8 @@ class IBfeeder_pst_adapter(IBDataFeeder):
         """
         data = {}
         for inst in self.instruments_names:
-            
-           
+            print
+            print(self.instruments_names)
             df = self.instruments_df[inst]
             df = df.rename(index=str, columns={"time": "date"})
             df = df.set_index('date')
@@ -139,7 +139,8 @@ if __name__ == "__main__":
     
     
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
-    try:
-        asyncio.get_event_loop().run_forever()
-    except (KeyboardInterrupt, SystemExit):
-        pass
+    # try:
+    #     while True:
+            
+    # except (KeyboardInterrupt, SystemExit):
+    #     pass

@@ -10,7 +10,7 @@ BUFFER = 0.2 	    # Percentage
 
 # Instruments to trade with.
 instruments = {
-    'forex': ['EURUSD'],
+    'forex': ['EURUSD','GBPUSD'],
     'futures': [],
     'stocks': []
 }

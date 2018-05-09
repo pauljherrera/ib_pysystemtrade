@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import asyncio
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+#sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
 from pysystemtrade.interface.ib_data import ib_Data
 from pysystemtrade.private.rules import ewmac_forecast_with_defaults as ewmac
 from pysystemtrade.systems.forecasting import Rules
@@ -121,12 +121,12 @@ if __name__ == '__main__':
     data_feeder.pub.register('pysystemtrade_data', subscriber)
     
     
-    
+    print('gotyou')
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
-    try:
-        asyncio.get_event_loop().run_forever()
-    except (KeyboardInterrupt, SystemExit):
-        pass
+    # try:
+    #     asyncio.get_event_loop().run_forever()
+    # except (KeyboardInterrupt, SystemExit):
+    #     pass
 
 
 

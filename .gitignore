@@ -5,3 +5,7 @@ SystematicTrading.pdf
 myvenv
 *.docx
 *.tmp
+.vs
+ibapi
+async_test.py
+

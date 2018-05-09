@@ -1,0 +1,16 @@
+APScheduler==3.5.1
+cycler==0.10.0
+ib-insync==0.9.16
+kiwisolver==1.0.1
+matplotlib==2.2.2
+numpy==1.14.3
+pandas==0.23.0rc2
+pyparsing==2.2.0
+-e git+https://github.com/pauljherrera/ib_pysystemtrade@798717cdc0b0cc8bcf4a01279bd95fa12159c30d#egg=pysystemtrade&subdirectory=pysystemtrade
+python-dateutil==2.7.2
+pytz==2018.4
+PyYAML==3.12
+scipy==1.1.0
+six==1.11.0
+tqdm==4.23.3
+tzlocal==1.5.1
