@@ -139,9 +139,9 @@ class IBTrader(IBConnection, pub_sub.Subscriber):
         print("\nPlacing {} order of quantity {} for contract:".format(type_,
                                                                        quantity))
         print(contract)
-        
+        generado = 5000
         # Generating order.
-        order = ib.MarketOrder(type_, int(quantity), account=self.account)
+        order = ib.MarketOrder(type_, int(generado), account=self.account)
         
         # Placing order.
         order_trade_id = self._place_order(contract=contract, order=order)
@@ -195,6 +195,7 @@ class IBTrader(IBConnection, pub_sub.Subscriber):
         
         # Position calculations.
         current_position = self.get_instrument_position(instrument)
+        print(current_position)
         position_diff = forecast - current_position
         contract = self.contracts[instrument]
         buffer = current_position * self._buffer

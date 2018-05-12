@@ -43,7 +43,7 @@ class IBHistoricalData(IBConnection):
         # Initializing contracts.
         print('\nRetrieving historical data\n')
         if instruments_list:
-            for i in tqdm(instruments_list):
+            for i in instruments_list:
                 self.get_historical_data(i)
                 
             
@@ -75,7 +75,6 @@ class IBHistoricalData(IBConnection):
                                               barSizeSetting=timeframes[self.timeframe], 
                                               whatToShow='MIDPOINT', 
                                               useRTH=True))
-
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import numpy as np
 import asyncio
+import ib_insync as ib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
 from pysystemtrade.interface.ib_data import ib_Data
@@ -63,8 +64,8 @@ if __name__ == '__main__':
     # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
     try:
         
-        loop = asyncio.new_event_loop()
-        loop.run_forever()
+        ib.IB.run()
+        
     except (KeyboardInterrupt, SystemExit):
         pass
 

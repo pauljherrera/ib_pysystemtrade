@@ -4,8 +4,12 @@ import sys
 import os
 import asyncio
 import ib_insync as ib
+from ib_insync import *
+util.patchAsyncio()
+import pandas as pd
 
-from apscheduler.schedulers.background import BackgroundScheduler
+#from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__)))) 
 from utils import pub_sub
@@ -96,29 +100,36 @@ class IBfeeder_pst_adapter(IBDataFeeder):
         
         # Scheduling timed calls.
         self.timeframe = timeframe
-        scheduler = BackgroundScheduler()
+        scheduler = AsyncIOScheduler()
         scheduler.add_job(self.onTimer, trigger='cron',
-                          minute='*/{}'.format(timeframe))
+                          minute='*/{}'.format(timeframe))    
+
+        ib.IB.sleep(10) # This sleep wait for onBarUpdate to run.               
         scheduler.start()
         
-        # Adding pysystemtrade channel.
         self.pub.set_event('pysystemtrade_data')
+        
+        #ib.IB.schedule(3600,self.onTimer())
+        
+        
+        # Adding pysystemtrade channel.
+        
     
-    def onTimer(self):
+    async def onTimer(self):
         """
         Scheduled method. Will be called according to the timeframe set.
         """
         data = {}
         for inst in self.instruments_names:
-            print
-            print(self.instruments_names)
             df = self.instruments_df[inst]
+            
+            #print(df)
             df = df.rename(index=str, columns={"time": "date"})
             df = df.set_index('date')
             df = df.tz_localize(None)
-            
+            #print(df)
             data[inst] = df.resample('{}T'.format(self.timeframe))\
-                           .last()['close'].to_frame(name='close')
+                            .last()['close'].to_frame(name='close')
         self.pub.dispatch('pysystemtrade_data', data)
         
 

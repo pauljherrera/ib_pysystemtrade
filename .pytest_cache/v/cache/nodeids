@@ -1,0 +1,4 @@
+[
+  "pysystemtrade/tests/test_static.py::test_flake8",
+  "tests/async_test.py::test_multiply"
+]
