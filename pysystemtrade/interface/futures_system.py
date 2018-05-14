@@ -34,6 +34,6 @@ portfolio.drawdown().plot()
 plt.show()
 
 print("\n\nBacktest stats:")
-pprint(system.accounts.portfolio().stats())
+print(system.accounts.portfolio().stats())
 plt.show()
 

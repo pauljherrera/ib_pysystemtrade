@@ -10,8 +10,9 @@ my_config = Config("interface.futuresconfig.yaml")
 
 system = futures_system(log_level="on", config=my_config)
 # We parse the config object acording the class, for basesystem, the keyword is config, this change 
-# accordding to class, as you can see we don't need to parse the stages.It makes everything futures_system does
-# but with customs atributes.
+# accordding to class, as you can see we don't need to parse the stages.It makes everything
+#  futures_system does but with customs atributes.
+
 portfolio = system.accounts.portfolio()
 print(system.positionSize.get_subsystem_position("EDOLLAR").tail(2))
 # The output is somenthing like below

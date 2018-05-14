@@ -110,7 +110,13 @@ class IBfeeder_pst_adapter(IBDataFeeder):
         """
         data = {}
         for inst in self.instruments_names:
-            df = self.instruments_df[inst].set_index('time')
+            
+           
+            df = self.instruments_df[inst]
+            df = df.rename(index=str, columns={"time": "date"})
+            df = df.set_index('date')
+            df = df.tz_localize(None)
+            
             data[inst] = df.resample('{}T'.format(self.timeframe))\
                            .last()['close'].to_frame(name='close')
         self.pub.dispatch('pysystemtrade_data', data)

@@ -2,3 +2,7 @@ SystematicTrading.pdf
 *.pyc
 */__pycache__
 passwords.txt
+.vscode
+myvenv
+*.docx
+*.tmp
