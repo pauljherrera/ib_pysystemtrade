@@ -1,3 +1,4 @@
 SystematicTrading.pdf
 *.pyc
 */__pycache__
+passwords.txt
